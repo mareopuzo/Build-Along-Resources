@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clay Brand Book — Working Reconstruction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Real Roobert (trial files from Displaay, supplied by Clay) — falls back to Schibsted Grotesk */
+  @font-face {
+    font-family:"Roobert";
+    src:url("clay assets/Roobert-Font/RoobertTRIALVF-BF67243fd545701.ttf") format("truetype-variations");
+    font-weight:100 900; font-style:normal; font-display:swap;
+  }
+  @font-face {
+    font-family:"Roobert Mono";
+    src:url("clay assets/Roobert-Font/RoobertMonoTRIAL-Regular-BF67243fd29a433.otf") format("opentype");
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  :root {
+    /* Clay tokens — CONFIRMED from clay.com :root custom properties */
+    --oat-50:#fffcfa; --oat-100:#fefdfb; --oat-200:#f3f2ed; --oat-300:#eee9df;
+    --oat-400:#dad4c8; --oat-500:#c0bbaf; --oat-600:#9f9b93; --oat-700:#85817a; --oat-800:#55534e;
+    --ink:#1b1a18; --border:#e0dedc; --grey-900:#282c35;
+    --hero-green:#035D44;
+    --blueberry:#3859f9; --blueberry-l:#429dff; --blueberry-d:#001433;
+    --tangerine:#ff7614; --tangerine-cta:#b53c09; --tangerine-t:#fff3ed;
+    --lime:#cbd810; --lime-hl:#eef773; --lime-t:#fcfee2; --lime-d:#102b02;
+    --dragonfruit:#cc089e; --dragonfruit-t:#f8b9e3;
+    --lemon:#fcbe11; --lemon-t:#fae188;
+    --pomegranate:#fb4450; --ube:#8b5cf6; --slushie:#3bd3fd; --matcha:#078a52; --matcha-t:#dbffe0;
+    --retool-ink:#151515; --retool-cream:#e9ebdf; --retool-orange:#e8765e;
+    --ease-clay: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family:"Roobert","Schibsted Grotesk",-apple-system,Helvetica,Arial,sans-serif;
+    background:#DDD8CE; color:var(--ink); line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono { font-family:"Roobert Mono",ui-monospace,Menlo,monospace; }
+
+  /* ---------- page chassis: A4 landscape spreads ---------- */
+  .page {
+    width:297mm; height:210mm; background:var(--oat-100);
+    margin:10mm auto; padding:13mm 15mm 11mm; position:relative; overflow:hidden;
+    box-shadow:0 6px 30px rgba(27,26,24,.18);
+    page-break-after:always; break-after:page;
+    display:flex; flex-direction:column;
+  }
+  @page { size:A4 landscape; margin:0; }
+  @media print {
+    body { background:none; }
+    .page { margin:0; box-shadow:none; }
+  }
+
+  /* running footer */
+  .runner {
+    position:absolute; left:15mm; right:15mm; bottom:8mm;
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:8.2pt; color:var(--oat-600); letter-spacing:.02em;
+  }
+  .runner .dot { width:7px; height:7px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:baseline; }
+  .runner b { color:var(--oat-800); font-weight:600; }
+  .page-dark .runner, .page-dark .runner b { color:rgba(254,253,251,.65); }
+
+  /* chapter opener headline pattern: second line in accent (the Clay move) */
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:8.5pt; font-weight:600; letter-spacing:.09em; text-transform:uppercase;
+    background:var(--lemon); color:var(--ink); padding:4px 11px; border-radius:16px;
+    margin-bottom:7mm; align-self:flex-start;
+  }
+  h1.ch { font-size:44pt; line-height:1.0; letter-spacing:-0.04em; font-weight:560; }
+  h1.ch .accent { display:block; }
+  h2.sec { font-size:15pt; font-weight:600; letter-spacing:-0.02em; margin-bottom:4mm; }
+  p.lede { font-size:11.5pt; color:var(--oat-800); max-width:64ch; margin-top:5mm; }
+  .rule-note { font-size:9pt; color:var(--oat-700); }
+
+  .cols { display:grid; gap:8mm; flex:1; min-height:0; margin-top:7mm; }
+  .cols-2 { grid-template-columns:1fr 1fr; }
+  .cols-32 { grid-template-columns:1.35fr 1fr; }
+
+  /* status chips */
+  .chip { display:inline-block; font-size:7.2pt; font-weight:600; letter-spacing:.06em; padding:2px 8px; border-radius:10px; vertical-align:2px; }
+  .chip.ok { background:var(--matcha-t); color:var(--matcha); }
+  .chip.obs { background:var(--lemon-t); color:#7a5a03; }
+  .chip.hyp { background:var(--dragonfruit-t); color:var(--dragonfruit); }
+
+  /* ---------- cover ---------- */
+  .cover { background:var(--hero-green); color:var(--oat-100); justify-content:flex-end; }
+  .cover .props span { position:absolute; border-radius:50%; }
+  .cover .kicker { font-size:10pt; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--lemon); margin-bottom:8mm; }
+  .cover h1 { font-size:76pt; line-height:0.98; letter-spacing:-0.045em; font-weight:560; max-width:11ch; }
+  .cover h1 em { font-style:normal; color:var(--lime-hl); }
+  .cover .meta { margin-top:10mm; display:flex; gap:14mm; font-size:9.5pt; color:rgba(254,253,251,.85); }
+  .cover .meta b { display:block; color:#fff; font-weight:600; margin-bottom:1mm; }
+  .cover .hills { position:absolute; right:-30mm; top:-30mm; width:150mm; opacity:.9; }
+
+  /* ---------- logo page ---------- */
+  .lockup-stage { background:var(--oat-200); border:1px solid var(--border); border-radius:18px; padding:12mm; display:flex; align-items:center; justify-content:center; }
+  .lockup { display:flex; align-items:center; gap:7mm; font-weight:700; letter-spacing:-0.03em; font-size:24pt; }
+  .lockup .x { font-weight:400; color:var(--oat-600); font-size:17pt; }
+  .lockup .retool { font-family:"Roobert Mono",monospace; font-weight:500; letter-spacing:-0.01em; }
+  .dodont { display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+  .dd { border-radius:12px; padding:5mm 6mm; font-size:9pt; }
+  .dd b { display:block; font-size:8pt; letter-spacing:.08em; text-transform:uppercase; margin-bottom:2mm; }
+  .dd.do { background:var(--matcha-t); } .dd.do b { color:var(--matcha); }
+  .dd.dont { background:#fdeaea; } .dd.dont b { color:var(--pomegranate); }
+
+  /* ---------- color pages ---------- */
+  .swatch-row { display:flex; border-radius:14px; overflow:hidden; border:1px solid var(--border); }
+  .swatch-row .sw { flex:1; height:30mm; position:relative; }
+  .sw .lab { position:absolute; left:3mm; right:3mm; bottom:2.5mm; font-size:7pt; line-height:1.35; }
+  .fam { border-radius:14px; overflow:hidden; border:1px solid var(--border); display:flex; flex-direction:column; }
+  .fam .main { flex:1; padding:4mm; display:flex; flex-direction:column; justify-content:space-between; min-height:20mm; }
+  .fam .main .nm { font-weight:600; font-size:10.5pt; letter-spacing:-0.01em; }
+  .fam .main .hx { font-size:7.5pt; opacity:.85; }
+  .fam .shades { display:flex; height:7mm; }
+  .fam .shades i { flex:1; }
+  .fam .use { background:#fff; font-size:7.4pt; color:var(--oat-700); padding:2mm 4mm; border-top:1px solid var(--border); }
+  .rules-list { counter-reset:r; display:flex; flex-direction:column; gap:4mm; }
+  .rules-list .r { display:flex; gap:4mm; align-items:flex-start; font-size:9.6pt; }
+  .rules-list .r::before {
+    counter-increment:r; content:counter(r);
+    flex:0 0 auto; width:8mm; height:8mm; border-radius:50%; background:var(--ink); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:9pt; font-weight:600;
+  }
+
+  /* ---------- typography page ---------- */
+  .specimen .row { display:flex; align-items:baseline; gap:6mm; border-bottom:1px solid var(--border); padding:3.5mm 0; }
+  .specimen .demo { letter-spacing:-0.04em; line-height:1.0; white-space:nowrap; }
+  .specimen .spec { margin-left:auto; text-align:right; font-size:7.4pt; color:var(--oat-700); line-height:1.5; }
+
+  /* ---------- wireframe ---------- */
+  .wf { display:flex; flex-direction:column; gap:1.6mm; }
+  .wf .b { border-radius:6px; padding:2.2mm 4mm; font-size:8pt; font-weight:500; border:1px solid var(--border); background:#fff; display:flex; justify-content:space-between; align-items:center; }
+  .wf .b i { font-style:normal; font-size:7pt; color:var(--oat-600); }
+  .wf .b.green { background:var(--hero-green); color:var(--oat-100); border-color:var(--hero-green); }
+  .wf .b.green i { color:rgba(254,253,251,.7); }
+  .wf .b.cream { background:var(--oat-200); }
+  .wf .b.stack { border-left:4px solid var(--blueberry); }
+
+  /* ---------- motion page ---------- */
+  .motion-card { background:#fff; border:1px solid var(--border); border-radius:14px; padding:5mm 6mm; }
+  .motion-card h3 { font-size:10pt; font-weight:600; margin-bottom:1.5mm; }
+  .motion-card p { font-size:8.6pt; color:var(--oat-700); }
+  .stack-demo { position:relative; height:34mm; }
+  .stack-demo .c { position:absolute; left:0; right:0; height:18mm; border-radius:10px; padding:3mm 4mm; font-size:8pt; font-weight:600; color:#fff; }
+
+  /* ---------- components page ---------- */
+  .comp-stage { background:#fff; border:1px solid var(--border); border-radius:14px; padding:5mm; }
+  .btn { display:inline-flex; align-items:center; gap:6px; font-weight:500; font-size:10pt; padding:6px 14px; border-radius:12px; text-decoration:none; }
+  .btn-primary { background:#000; color:#fff; }
+  .btn-secondary { background:var(--oat-200); color:var(--ink); }
+  .minicard { border-radius:16px; padding:5mm; position:relative; }
+  .minicard .tag { display:inline-block; background:#fff; font-size:6.8pt; font-weight:700; letter-spacing:.09em; text-transform:uppercase; padding:2px 8px; border-radius:10px; margin-bottom:3mm; }
+  .minicard h4 { font-size:13pt; line-height:1.05; letter-spacing:-0.03em; font-weight:600; }
+  .minicard .proof { font-size:7.6pt; margin-top:3mm; color:var(--oat-800); }
+  .minicard .cta { display:inline-block; margin-top:3mm; font-size:8pt; font-weight:600; color:#fff; padding:4px 10px; border-radius:9px; }
+
+  /* voice page */
+  .trait { background:#fff; border:1px solid var(--border); border-radius:14px; padding:5mm 6mm; }
+  .trait h3 { font-size:11pt; font-weight:600; }
+  .trait .butnot { font-size:8pt; font-weight:600; margin:1.5mm 0 2.5mm; }
+  .trait .butnot em { font-style:normal; color:var(--pomegranate); }
+  .trait .butnot strong { color:var(--matcha); }
+  .trait p { font-size:8.6pt; color:var(--oat-700); }
+  .trait blockquote { font-size:8.8pt; margin-top:2.5mm; padding-left:3mm; border-left:2.5px solid var(--lemon); color:var(--ink); }
+
+  table.tokens { width:100%; border-collapse:collapse; font-size:8.6pt; }
+  table.tokens th { text-align:left; font-size:7.4pt; letter-spacing:.07em; text-transform:uppercase; color:var(--oat-600); padding:1.6mm 2mm; border-bottom:1.5px solid var(--ink); }
+  table.tokens td { padding:1.8mm 2mm; border-bottom:1px solid var(--border); vertical-align:top; }
+
+  .page-dark { background:var(--hero-green); color:var(--oat-100); }
+</style>
+</head>
+<body>
+
+<!-- ================= 1 · COVER ================= -->
+<section class="page cover page-dark">
+  <div class="props" aria-hidden="true">
+    <span style="width:16mm;height:16mm;background:var(--lemon);top:22mm;right:88mm;"></span>
+    <span style="width:9mm;height:9mm;background:var(--dragonfruit-t);top:44mm;right:70mm;"></span>
+    <span style="width:12mm;height:12mm;background:var(--slushie);top:30mm;right:44mm;"></span>
+    <span style="width:7mm;height:7mm;background:var(--tangerine);top:56mm;right:34mm;"></span>
+    <span style="width:10mm;height:10mm;background:var(--lime-hl);top:70mm;right:60mm;"></span>
+  </div>
+  <div class="kicker">Brand book · Working reconstruction · July 2026</div>
+  <h1>The Clay<br>brand, <em>read from<br>the source.</em></h1>
+  <div class="meta">
+    <div><b>Built from</b>clay.com live CSS &amp; copy · clay.com/press · Clay's redesign notes</div>
+    <div><b>For</b>Clay × prospect landing pages (internal preview)</div>
+    <div><b>Companion</b>clay-tone-of-voice.md · clay-brand-book.md</div>
+  </div>
+  <div class="runner"><span><b>Clay</b> — not an official Clay document; every token labeled confirmed / observed / hypothesis</span><span>01</span></div>
+</section>
+
+<!-- ================= 2 · CONTENTS + FOUNDATION ================= -->
+<section class="page">
+  <span class="eyebrow">Foundation</span>
+  <h1 class="ch">Playful, expansive,<span class="accent" style="color:var(--matcha)">felt, not explained.</span></h1>
+  <div class="cols cols-2">
+    <div>
+      <p class="lede" style="margin-top:0">Clay's brand team describes the brand as <b>"playful, expansive, creative"</b> and says <b>"the brand is felt, not explained."</b> The visual metaphor is literal clay: stop-motion plasticine machines moving little colored balls — data — through pipelines. The stance is explicitly against the "sea of grey websites, AI-generated blurry textures." Craft is the differentiator. <span class="chip ok">CONFIRMED — Clay's own posts &amp; JDs</span></p>
+      <p class="lede" style="margin-top:4mm">Positioning: Clay invented <b>GTM engineering</b>. The product is infrastructure — <i>"Build systems to grow revenue."</i> Play lives in the visuals; the copy stays composed.</p>
+    </div>
+    <div>
+      <h2 class="sec">Contents</h2>
+      <table class="tokens">
+        <tr><td><b>03</b></td><td>Logo &amp; the co-brand lockup</td></tr>
+        <tr><td><b>04</b></td><td>Color — neutrals &amp; hero green</td></tr>
+        <tr><td><b>05</b></td><td>Color — the accent families</td></tr>
+        <tr><td><b>06</b></td><td>Typography</td></tr>
+        <tr><td><b>07</b></td><td>Layout &amp; the homepage skeleton</td></tr>
+        <tr><td><b>08</b></td><td>Motion</td></tr>
+        <tr><td><b>09</b></td><td>Components</td></tr>
+        <tr><td><b>10</b></td><td>Voice, in one page</td></tr>
+        <tr><td><b>11</b></td><td>Proof points, partner colors &amp; governance</td></tr>
+      </table>
+      <p class="rule-note" style="margin-top:5mm">Every value carries a status: <span class="chip ok">CONFIRMED</span> read from clay.com's code or official pages · <span class="chip obs">OBSERVED</span> seen live, not extracted as a token · <span class="chip hyp">HYPOTHESIS</span> inferred, verify before canon.</p>
+    </div>
+  </div>
+  <div class="runner"><span><span class="dot" style="background:var(--matcha)"></span><b>Foundation</b> · Clay Brand Book</span><span>02</span></div>
+</section>
+
+<!-- ================= 3 · LOGO / LOCKUP ================= -->
+<section class="page">
+  <span class="eyebrow">Logo</span>
+  <h1 class="ch">One wordmark,<span class="accent" style="color:var(--blueberry)">in ink or cream.</span></h1>
+  <div class="cols cols-32">
+    <div style="display:flex;flex-direction:column;gap:5mm">
+      <div class="lockup-stage" style="flex:1">
+        <div class="lockup">
+          <span>Clay</span><span class="x">×</span><span class="retool">Retool</span>
+        </div>
+      </div>
+      <p class="rule-note">The co-brand lockup as used on the prospect pages. Clay leads on Clay-authored pages; the <b>×</b> gets equal air on both sides, with clear space at least the width of the smaller mark. Both marks sit at equal <i>visual</i> weight. <span class="chip ok">clay.com/press has official co-brand guidance</span> <span class="chip obs">spacing from Red Hat / Lucid standards</span></p>
+    </div>
+    <div class="dodont" style="grid-template-columns:1fr">
+      <div class="dd do"><b>Do</b>Ink wordmark on light; cream on the dark green hero. Download real assets from clay.com/press (editorial use). Put the partner's accent color in the <i>page</i>.</div>
+      <div class="dd dont"><b>Don't</b>Recolor either logo into accent hues. Merge the two marks into one "endorsement logo." Gradient, skew, or stack the wordmark. Guess a partner's brand color from memory.</div>
+      <p class="rule-note">The two-dot mark on the pilot pages is our own stand-in, not Clay's real mark — fine for a preview, swap before anything ships. <span class="chip hyp">stand-in</span></p>
+    </div>
+  </div>
+  <div class="runner"><span><span class="dot" style="background:var(--blueberry)"></span><b>Logo</b> · Clay Brand Book</span><span>03</span></div>
+</section>
+
+<!-- ================= 4 · COLOR: NEUTRALS ================= -->
+<section class="page">
+  <span class="eyebrow">Color · 1 of 2</span>
+  <h1 class="ch">Oat and ink is the page.<span class="accent" style="color:var(--hero-green)">Green is the world.</span></h1>
+  <div style="margin-top:7mm">
+    <h2 class="sec">The oat family — warm neutrals <span class="chip ok">CONFIRMED :root tokens</span></h2>
+    <div class="swatch-row">
+      <div class="sw" style="background:#fffcfa"><span class="lab">oat-50<br>#FFFCFA</span></div>
+      <div class="sw" style="background:#fefdfb"><span class="lab">oat-100 · page bg<br>#FEFDFB</span></div>
+      <div class="sw" style="background:#f3f2ed"><span class="lab">oat-200 · cards, 2° btn<br>#F3F2ED</span></div>
+      <div class="sw" style="background:#eee9df"><span class="lab">oat-300<br>#EEE9DF</span></div>
+      <div class="sw" style="background:#dad4c8"><span class="lab">oat-400 · dividers<br>#DAD4C8</span></div>
+      <div class="sw" style="background:#c0bbaf"><span class="lab">oat-500<br>#C0BBAF</span></div>
+      <div class="sw" style="background:#9f9b93"><span class="lab" style="color:#fff">oat-600<br>#9F9B93</span></div>
+      <div class="sw" style="background:#55534e"><span class="lab" style="color:#fff">oat-800<br>#55534E</span></div>
+      <div class="sw" style="background:#1b1a18"><span class="lab" style="color:#fff">ink · text, 1° btn<br>#1B1A18</span></div>
+    </div>
+  </div>
+  <div class="cols cols-2" style="margin-top:6mm">
+    <div>
+      <h2 class="sec">Hero green <span class="chip ok">CONFIRMED computed + bundle</span></h2>
+      <div class="swatch-row" style="height:30mm"><div class="sw" style="background:#035D44"><span class="lab" style="color:#fff;font-size:8pt">#035D44 · hero &amp; final-CTA landscape scenes only. Never a button, never text.</span></div></div>
+    </div>
+    <div>
+      <h2 class="sec">Supporting</h2>
+      <div class="swatch-row" style="height:30mm">
+        <div class="sw" style="background:#e0dedc"><span class="lab">border<br>#E0DEDC</span></div>
+        <div class="sw" style="background:#282c35"><span class="lab" style="color:#fff">grey-900 · btn hover<br>#282C35</span></div>
+        <div class="sw" style="background:#000"><span class="lab" style="color:#fff">black · 1° button<br>#000000</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="runner"><span><span class="dot" style="background:var(--hero-green)"></span><b>Color</b> · Clay Brand Book</span><span>04</span></div>
+</section>
+
+<!-- ================= 5 · COLOR: ACCENTS ================= -->
+<section class="page">
+  <span class="eyebrow">Color · 2 of 2</span>
+  <h1 class="ch">Nine flavors,<span class="accent" style="color:var(--dragonfruit)">one per section.</span></h1>
+  <div class="cols" style="grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:4mm;margin-top:4mm;margin-bottom:9mm">
+    <div class="fam"><div class="main" style="background:var(--blueberry);color:#fff"><span class="nm">Blueberry</span><span class="hx mono">#3859F9 / #395AFA</span></div><div class="shades"><i style="background:#429dff"></i><i style="background:#3859f9"></i><i style="background:#0382f7"></i><i style="background:#002f67"></i><i style="background:#001433"></i></div><div class="use">DATA sections · tinted blue cards</div></div>
+    <div class="fam"><div class="main" style="background:var(--tangerine);color:#fff"><span class="nm">Tangerine</span><span class="hx mono">#FF7614 · CTA #B53C09</span></div><div class="shades"><i style="background:#fff3ed"></i><i style="background:#ff7614"></i><i style="background:#b53c09"></i><i style="background:#793325"></i><i style="background:#381005"></i></div><div class="use">AGENTS sections · rust CTAs on cream</div></div>
+    <div class="fam"><div class="main" style="background:var(--lime);color:var(--lime-d)"><span class="nm">Lime</span><span class="hx mono">#CBD810 · hl #EEF773</span></div><div class="shades"><i style="background:#fcfee2"></i><i style="background:#eef773"></i><i style="background:#cbd810"></i><i style="background:#7f7f00"></i><i style="background:#102b02"></i></div><div class="use">ORCHESTRATION · active chips, UI row highlights</div></div>
+    <div class="fam"><div class="main" style="background:var(--dragonfruit);color:#fff"><span class="nm">Dragonfruit</span><span class="hx mono">#CC089E</span></div><div class="shades"><i style="background:#f8b9e3"></i><i style="background:#ff7ad5"></i><i style="background:#cc089e"></i><i style="background:#46022f"></i></div><div class="use">EXECUTION sections · pink cards</div></div>
+    <div class="fam"><div class="main" style="background:var(--lemon);color:#372201"><span class="nm">Lemon</span><span class="hx mono">#FCBE11</span></div><div class="shades"><i style="background:#fae188"></i><i style="background:#fcbe11"></i><i style="background:#372201"></i></div><div class="use">Eyebrows &amp; badges ("LATEST LAUNCH")</div></div>
+    <div class="fam"><div class="main" style="background:linear-gradient(90deg,#fb4450 0 25%,#8b5cf6 0 50%,#3bd3fd 0 75%,#078a52 0)"; color:#fff"><span class="nm" style="color:#fff">Pomegranate · Ube · Slushie · Matcha</span><span class="hx mono" style="color:#fff">#FB4450 · #8B5CF6 · #3BD3FD · #078A52</span></div><div class="shades"><i style="background:#fb4450"></i><i style="background:#c1b0ff"></i><i style="background:#aaebfd"></i><i style="background:#dbffe0"></i></div><div class="use">Reserve colors — used sparingly</div></div>
+  </div>
+  <div style="margin-top:5mm">
+    <div class="rules-list" style="flex-direction:row;gap:6mm;font-size:8.6pt">
+      <div class="r" style="flex:1">Base is always oat + ink. Accents are per-section: one family per card, never rainbow within a block.</div>
+      <div class="r" style="flex:1">Two-line headlines set the second line in the section's accent.</div>
+      <div class="r" style="flex:1">Tints (100/200) make card backgrounds; 400/500 makes that card's CTA and eyebrow.</div>
+    </div>
+  </div>
+  <div class="runner"><span><span class="dot" style="background:var(--dragonfruit)"></span><b>Color</b> · Clay Brand Book · all hex <b>CONFIRMED</b>, pairings <b>OBSERVED</b></span><span>05</span></div>
+</section>
+
+<!-- ================= 6 · TYPOGRAPHY ================= -->
+<section class="page">
+  <span class="eyebrow">Typography</span>
+  <h1 class="ch">Medium weight, tight leading,<span class="accent" style="color:var(--tangerine-cta)">and size does the talking.</span></h1>
+  <div class="cols cols-32">
+    <div class="specimen">
+      <div class="row"><span class="demo" style="font-size:34pt;font-weight:600">Build systems</span><span class="spec">h1 · 88px / <b>1.0</b> · wt <b>575</b> · −0.04em<br><span class="chip ok">CONFIRMED computed</span></span></div>
+      <div class="row"><span class="demo" style="font-size:26pt;font-weight:500;letter-spacing:-0.03em">to grow revenue</span><span class="spec">h2 · 72px / 1.0 · wt 500 · −0.03em</span></div>
+      <div class="row"><span class="demo" style="font-size:18pt;font-weight:500">GTM engineers build on Clay</span><span class="spec">h3 · 48px / 1.0 · wt 500 · −0.04em</span></div>
+      <div class="row"><span style="font-size:10.5pt;max-width:52ch">Infrastructure to get any data, run agentic workflows, and launch GTM plays. Body stays quiet: regular weight, comfortable leading.</span><span class="spec">body · 16px / 24px · wt 400</span></div>
+      <div class="row" style="border-bottom:none"><span style="font-size:9pt;font-weight:500">Nav / UI labels — Start free trial</span><span class="spec">nav · 14px / 21px · wt 500</span></div>
+    </div>
+    <div>
+      <h2 class="sec">The faces</h2>
+      <table class="tokens">
+        <tr><td><b>Roobert</b> (RoobertVF, 300–900)</td><td>Everything. Trial files in <span class="mono">clay assets/</span> (this book is set in them); license before shipping publicly. <span class="chip ok">CONFIRMED</span></td></tr>
+        <tr><td><b>Roobert Mono</b></td><td>Secondary / mono token. <span class="chip ok">CONFIRMED</span></td></tr>
+        <tr><td><b>Canela Web</b></td><td>Serif, declared, sparing. <span class="chip ok">CONFIRMED</span></td></tr>
+        <tr><td><b>Schibsted Grotesk</b></td><td>Free stand-in for hosted pages where the trial license won’t stretch. <span class="chip hyp">RECOMMENDED</span></td></tr>
+      </table>
+      <p class="rule-note" style="margin-top:4mm">The signature moves: heading line-height of <b>exactly 1.0</b>, tracking −0.03 to −0.04em, and <b>medium weights (500–575) instead of bold</b>. Get these three right and any fallback face disappears.</p>
+    </div>
+  </div>
+  <div class="runner"><span><span class="dot" style="background:var(--tangerine)"></span><b>Typography</b> · Clay Brand Book</span><span>06</span></div>
+</section>
+
+<!-- ================= 7 · LAYOUT ================= -->
+<section class="page">
+  <span class="eyebrow">Layout</span>
+  <h1 class="ch">The page opens and closes<span class="accent" style="color:var(--hero-green)">in the clay world.</span></h1>
+  <div class="cols cols-2">
+    <div class="wf">
+      <div class="b">Sticky rounded nav <i>logo · links · ⌘K · cream + black CTAs</i></div>
+      <div class="b green">Hero — 3D clay landscape, left-aligned 88px headline <i>#035D44</i></div>
+      <div class="b cream">Logo marquee card + stat callouts <i>proof and logos in one</i></div>
+      <div class="b">Product tabs — spreadsheet mockup <i>lime highlights</i></div>
+      <div class="b">"What do you want to build?" prompt box <i>typewriter</i></div>
+      <div class="b stack">Stacked feature cards ×4 — DATA / AGENTS / ORCH. / EXEC. <i>sticky scroll</i></div>
+      <div class="b">Testimonial video carousel</div>
+      <div class="b cream">Final CTA over the clay ball-pit scene</div>
+      <div class="b">Footer — white rounded card floating on the illustration</div>
+    </div>
+    <div>
+      <h2 class="sec">Measurements <span class="chip ok">CONFIRMED</span></h2>
+      <table class="tokens">
+        <tr><td>Content max-width</td><td class="mono">1280px (.container-regular); fluid to 1440px</td></tr>
+        <tr><td>Section padding</td><td class="mono">48–64px vertical — denser than typical SaaS</td></tr>
+        <tr><td>Card radius</td><td class="mono">~24–32px <span class="chip obs">OBSERVED</span></td></tr>
+        <tr><td>Button radius</td><td class="mono">12px</td></tr>
+        <tr><td>Elevation</td><td>None. Flat color + radius; box-shadow: none throughout.</td></tr>
+      </table>
+      <p class="rule-note" style="margin-top:4mm">Interior pages calm down: white background, split hero (headline left / media card right), same tokens. The illustration belongs at the very top and bottom — the middle of the page is clean product UI. <span class="chip obs">OBSERVED</span></p>
+    </div>
+  </div>
+  <div class="runner"><span><span class="dot" style="background:var(--hero-green)"></span><b>Layout</b> · Clay Brand Book</span><span>07</span></div>
+</section>
+
+<!-- ================= 8 · MOTION ================= -->
+<section class="page">
+  <span class="eyebrow">Motion</span>
+  <h1 class="ch">One signature scroll.<span class="accent" style="color:var(--blueberry)">Everything else, composed.</span></h1>
+  <div class="cols" style="grid-template-columns:1.15fr 1fr 1fr;gap:5mm">
+    <div class="motion-card">
+      <h3>The stacked-card scroll <span class="chip ok">CONFIRMED — pure CSS</span></h3>
+      <div class="stack-demo" aria-hidden="true">
+        <div class="c" style="background:var(--blueberry);top:0">DATA</div>
+        <div class="c" style="background:var(--tangerine);top:7mm">AGENTS</div>
+        <div class="c" style="background:var(--lime);color:var(--lime-d);top:14mm">ORCHESTRATION</div>
+      </div>
+      <p style="margin-top:2mm">Each feature card is <span class="mono">position: sticky; top: 72px</span> — every new card slides up over the last. No JavaScript, no scrub. The one motion moment the page is remembered by.</p>
+    </div>
+    <div class="motion-card">
+      <h3>The house easing <span class="chip ok">CONFIRMED ×21</span></h3>
+      <svg viewBox="0 0 100 60" style="width:100%;height:30mm" aria-hidden="true">
+        <rect x="0" y="0" width="100" height="60" fill="#fcfee2" rx="4"/>
+        <path d="M8,52 C13.5,2.8 17.9,42 60.9,10 L92,8" fill="none" stroke="#1b1a18" stroke-width="2"/>
+        <circle cx="8" cy="52" r="2.4" fill="#cbd810" stroke="#1b1a18"/><circle cx="92" cy="8" r="2.4" fill="#cbd810" stroke="#1b1a18"/>
+      </svg>
+      <p><span class="mono">cubic-bezier(0.075, 0.82, 0.165, 1)</span> at <span class="mono">0.3s</span> — fast start, soft landing. Button hovers change <b>background color only</b>: black → grey-900 <span class="mono">#282C35</span>. No lifts, no shadows.</p>
+    </div>
+    <div class="motion-card">
+      <h3>The supporting cast</h3>
+      <p style="font-size:8.6pt"><b>Marquee</b> — logo strip loops via <span class="mono">translateX(-50%)</span> keyframe.<br><br><b>bouncy</b> — rotateZ 0→−4°→0 wobble on playful props.<br><br><b>fadein</b> — opacity-only entrances, used sparingly.<br><br><b>What Clay doesn't do:</b> scroll-jacking, parallax, elevation. GSAP is loaded, but the homepage runs zero ScrollTriggers. <span class="chip ok">CONFIRMED live</span></p>
+    </div>
+  </div>
+  <div class="runner"><span><span class="dot" style="background:var(--blueberry)"></span><b>Motion</b> · Clay Brand Book</span><span>08</span></div>
+</section>
+
+<!-- ================= 9 · COMPONENTS ================= -->
+<section class="page">
+  <span class="eyebrow">Components</span>
+  <h1 class="ch">Flat color, big radius,<span class="accent" style="color:var(--tangerine-cta)">and proof in every card.</span></h1>
+  <div class="cols" style="grid-template-columns:1fr 1.5fr;gap:6mm">
+    <div style="display:flex;flex-direction:column;gap:4mm">
+      <div class="comp-stage">
+        <h2 class="sec" style="font-size:10pt">Buttons — 12px radius, wt 500 <span class="chip ok">CONFIRMED</span></h2>
+        <p style="display:flex;gap:3mm;flex-wrap:wrap;margin-top:2mm">
+          <span class="btn btn-primary">Start free trial</span>
+          <span class="btn btn-secondary">Get a demo</span>
+          <span class="btn" style="background:var(--blueberry);color:#fff">Explore data</span>
+          <span class="btn" style="background:var(--tangerine-cta);color:#fff">Try Claygents</span>
+        </p>
+        <p class="rule-note" style="margin-top:2.5mm">Primary #000 → hover #282C35 · secondary oat-200 · in-card CTAs take the card's accent. Never a shadow, never a lift.</p>
+      </div>
+      <div class="comp-stage">
+        <h2 class="sec" style="font-size:10pt">Chips &amp; logo strip</h2>
+        <p style="display:flex;gap:2.5mm;flex-wrap:wrap;align-items:center">
+          <span style="background:var(--lime-hl);border-radius:16px;padding:3px 10px;font-size:8pt;font-weight:600">TAM Sourcing</span>
+          <span style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:3px 10px;font-size:8pt;font-weight:500">Automated Inbound</span>
+          <span style="font-weight:700;font-size:9.5pt;color:var(--oat-600)">OpenAI</span>
+          <span style="font-size:8pt;font-weight:700;background:var(--oat-200);border-radius:10px;padding:2px 8px">+140% outbound pipeline</span>
+          <span style="font-weight:700;font-size:9.5pt;color:var(--oat-600)">Canva</span>
+        </p>
+        <p class="rule-note" style="margin-top:2.5mm">Chips 16–18px radius, lime = active. Logos marquee inside a cream card, interleaved with bold stat callouts.</p>
+      </div>
+    </div>
+    <div class="minicard" style="background:#e9eefb">
+      <span class="tag" style="color:var(--blueberry)">Data</span>
+      <h4>Get data from the most<br><span style="color:var(--blueberry)">complete marketplace</span></h4>
+      <p style="font-size:8.6pt;color:var(--oat-800);margin-top:2.5mm;max-width:44ch">Card anatomy: accent-tinted background → pill eyebrow → two-line heading, <b>second line in the accent</b> → body → named proof → accent CTA. Illustration sits right.</p>
+      <p class="proof"><b>Anthropic</b> 3x'd their enrichment rate with Clay's data marketplace.</p>
+      <span class="cta" style="background:var(--blueberry)">Explore data →</span>
+    </div>
+  </div>
+  <div class="runner"><span><span class="dot" style="background:var(--tangerine)"></span><b>Components</b> · Clay Brand Book</span><span>09</span></div>
+</section>
+
+<!-- ================= 10 · VOICE ================= -->
+<section class="page">
+  <span class="eyebrow">Voice · full guide in clay-tone-of-voice.md</span>
+  <h1 class="ch">A confident engineer,<span class="accent" style="color:var(--matcha)">talking to a builder.</span></h1>
+  <div class="cols" style="grid-template-columns:1fr 1fr 1fr;gap:5mm">
+    <div class="trait">
+      <h3>Builder-confident</h3>
+      <div class="butnot"><strong>direct</strong> · <em>never arrogant or salesy</em></div>
+      <p>Verb-first, second person, contractions. Vocabulary: build, systems, plays, GTM, orchestrate, reps, signals.</p>
+      <blockquote>"Build systems to grow revenue"</blockquote>
+    </div>
+    <div class="trait">
+      <h3>Absurdly specific</h3>
+      <div class="butnot"><strong>numbers + mechanism</strong> · <em>never vague</em></div>
+      <p>Proof = bold company + multiplier verb + metric + how. No number? Cut the claim. The villain is manual work, never a named competitor.</p>
+      <blockquote>"Mistral AI cut TAM mapping from 2 months to 10 days."</blockquote>
+    </div>
+    <div class="trait">
+      <h3>Quietly playful</h3>
+      <div class="butnot"><strong>one wink per page</strong> · <em>never jokey, no emoji, no "!"</em></div>
+      <p>The play lives in the visuals; copy stays composed. Max one rhetorical-question headline.</p>
+      <blockquote>"Why use one contact database when you can use them all?"</blockquote>
+    </div>
+  </div>
+  <p class="rule-note" style="margin-top:5mm">Tone dial for the prospect pages: <b>homepage confidence + pricing-page warmth</b> — the reader already booked the demo. Prime, don't re-sell. Banned: revolutionary, cutting-edge, best-in-class, game-changing, "leverage," exclamation marks.</p>
+  <div class="runner"><span><span class="dot" style="background:var(--matcha)"></span><b>Voice</b> · Clay Brand Book</span><span>10</span></div>
+</section>
+
+<!-- ================= 11 · PROOF + GOVERNANCE ================= -->
+<section class="page page-dark">
+  <span class="eyebrow">Proof &amp; governance</span>
+  <h1 class="ch" style="color:var(--oat-100)">Keep the numbers current,<span class="accent" style="color:var(--lime-hl)">keep the pages honest.</span></h1>
+  <div class="cols cols-2">
+    <div>
+      <h2 class="sec" style="color:var(--lemon)">Proof points — July 2026 <span class="chip ok">CONFIRMED on site</span></h2>
+      <table class="tokens" style="color:var(--oat-100)">
+        <tr><td style="border-color:rgba(254,253,251,.2)"><b>500,000+</b></td><td style="border-color:rgba(254,253,251,.2)">leading GTM teams</td></tr>
+        <tr><td style="border-color:rgba(254,253,251,.2)"><b>$5B</b></td><td style="border-color:rgba(254,253,251,.2)">valuation (NYT-covered tender offer)</td></tr>
+        <tr><td style="border-color:rgba(254,253,251,.2)"><b>200+</b></td><td style="border-color:rgba(254,253,251,.2)">data providers in the marketplace</td></tr>
+        <tr><td style="border-color:rgba(254,253,251,.2)"><b>140M</b></td><td style="border-color:rgba(254,253,251,.2)">monthly Claygent runs</td></tr>
+        <tr><td style="border-color:rgba(254,253,251,.2)"><b>4.9★</b></td><td style="border-color:rgba(254,253,251,.2)">on G2</td></tr>
+      </table>
+      <p class="rule-note" style="color:rgba(254,253,251,.7);margin-top:3mm">⚠️ The old 5,000-customers / $3.1B / 150-providers numbers are stale — never use.</p>
+    </div>
+    <div>
+      <h2 class="sec" style="color:var(--lemon)">Partner colors — pull from the live site</h2>
+      <div class="swatch-row" style="height:20mm;border-color:rgba(254,253,251,.25)">
+        <div class="sw" style="background:#151515"><span class="lab" style="color:#fff">Retool ink<br>#151515</span></div>
+        <div class="sw" style="background:#e9ebdf"><span class="lab">Retool cream<br>#E9EBDF</span></div>
+        <div class="sw" style="background:#e8765e"><span class="lab" style="color:#fff">Retool orange<br>#E8765E</span></div>
+      </div>
+      <p class="rule-note" style="color:rgba(254,253,251,.7);margin-top:3mm">Retool rebranded — the old indigo #3C3C8C is dead. <span class="chip ok">CONFIRMED from retool.com computed styles</span> Rule for the other four pages: read each partner's hex from their live CSS at build time, never from memory.</p>
+      <p class="rule-note" style="color:rgba(254,253,251,.7);margin-top:4mm">These pages are Clay-led previews, one prospect each, marked non-public. Never invent facts about the prospect. Real Clay logo assets: clay.com/press, editorial-use terms.</p>
+    </div>
+  </div>
+  <div class="runner"><span><b style="color:#fff">Clay Brand Book</b> · working reconstruction · 2026-07-21 · sources: clay.com live CSS &amp; copy, clay.com/press, Clay redesign notes</span><span>11</span></div>
+</section>
+
+</body>
+</html>

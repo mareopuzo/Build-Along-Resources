@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clay × Retool — Sarah Mitchell</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  /* ============ Fonts (Clay's real Roobert — trial license, preview use) ============ */
+  @font-face{
+    font-family:'Roobert'; src:url('assets/fonts/RoobertVF.ttf') format('truetype-variations');
+    font-weight:300 900; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Roobert Mono'; src:url('assets/fonts/RoobertMono-Regular.otf') format('opentype');
+    font-weight:400; font-display:swap;
+  }
+  @font-face{
+    font-family:'Roobert Mono'; src:url('assets/fonts/RoobertMono-Medium.otf') format('opentype');
+    font-weight:500; font-display:swap;
+  }
+
+  /* ============ Tokens (Clay oat system + Retool coral accent) ============ */
+  :root{
+    --oat-50:#fffcfa; --oat-100:#fefdfb; --oat-200:#f3f2ed; --oat-300:#eee9df;
+    --oat-400:#dad4c8; --border:#e0dedc;
+    --ink:#1b1a18; --ink-mut:#55534e; --muted:#807c73;
+    --green:#035d44; --green-deep:#02452f;
+    --coral:#e8765e;            /* Retool accent (real, retool.com) */
+    --blueberry:#3859f9; --blueberry-tint:#eef2ff;
+    --rust:#b53c09; --rust-tint:#fff3ed;
+    --lime:#cbd810; --lime-deep:#6f7a00; --lime-tint:#fcfee2; --lime-hi:#eef773;
+    --dragon:#cc089e; --dragon-tint:#fbecf6;
+    --sans:'Roobert','Schibsted Grotesk','Inter',Arial,sans-serif;
+    --mono:'Roobert Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --ease:cubic-bezier(0.075,0.82,0.165,1);
+    --wrap:1200px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans); background:var(--oat-100); color:var(--ink);
+    line-height:1.5; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:var(--wrap); margin:0 auto; padding:0 24px;}
+
+  /* type roles */
+  .eyebrow{
+    font-family:var(--mono); font-weight:500; font-size:12px; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  h1,h2,h3{font-weight:500; line-height:1.0; letter-spacing:-0.04em;}
+  h1{font-size:clamp(40px,6.4vw,82px); font-variation-settings:'wght' 560;}
+  h2{font-size:clamp(30px,4.6vw,56px); letter-spacing:-0.035em;}
+  h3{font-size:clamp(24px,3vw,38px);}
+  p{font-size:17px; line-height:1.55; color:var(--ink-mut);}
+  a{color:inherit; text-decoration:none;}
+
+  /* buttons — flat, 12px radius, no shadow (Clay rule) */
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--sans);
+    font-weight:500; font-size:15px; padding:11px 20px; border-radius:12px;
+    background:var(--ink); color:var(--oat-100); border:1px solid var(--ink);
+    transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+    cursor:pointer;
+  }
+  .btn:hover{background:#282c35; border-color:#282c35;}
+  .btn .arw{transition:transform .3s var(--ease);}
+  .btn:hover .arw{transform:translateX(3px);}
+  .btn-light{background:var(--oat-100); color:var(--ink); border-color:var(--oat-100);}
+  .btn-light:hover{background:var(--oat-200); border-color:var(--oat-200);}
+  a:focus-visible,.btn:focus-visible{outline:3px solid var(--coral); outline-offset:3px; border-radius:12px;}
+
+  /* ============ Nav — floating rounded pill ============ */
+  .nav-outer{position:sticky; top:14px; z-index:60; padding:0 16px;}
+  .nav{
+    max-width:var(--wrap); margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    background:rgba(254,253,251,0.82); backdrop-filter:blur(10px);
+    border:1px solid var(--border); border-radius:16px;
+    padding:9px 12px 9px 18px;
+  }
+  .lockup{display:flex; align-items:center; gap:12px;}
+  .lockup img{height:26px; width:auto; display:block;}
+  .lockup .x{font-family:var(--mono); color:var(--oat-400); font-size:15px; margin-top:1px;}
+  .lockup .partner{font-weight:500; font-size:20px; letter-spacing:-0.03em; color:var(--ink);}
+  .nav .btn{padding:9px 16px;}
+  @media(max-width:560px){ .nav .btn .lbl{display:none;} .nav .btn::after{content:'Confirm →';} }
+
+  /* ============ Hero — dark green rounded panel ============ */
+  .hero-shell{padding:16px 16px 0;}
+  .hero{
+    background:var(--green); color:var(--oat-100); border-radius:28px; overflow:hidden;
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:24px; align-items:center;
+    padding:64px 56px; position:relative;
+  }
+  .hero::after{ /* subtle top light */
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(120% 90% at 15% -10%, rgba(255,255,255,0.10), transparent 55%);
+  }
+  .hero-copy{position:relative; z-index:2; max-width:560px;}
+  .hero .eyebrow{color:rgba(254,253,251,0.62);}
+  .hero h1{margin:18px 0 22px; color:var(--oat-100);}
+  .hero h1 .accent{color:var(--coral);}
+  .hero p{color:rgba(254,253,251,0.82); font-size:19px; max-width:480px;}
+  .hero-cta{display:flex; align-items:center; gap:18px; margin-top:30px; flex-wrap:wrap;}
+  .hero-cta .micro{font-family:var(--mono); font-size:12.5px; color:rgba(254,253,251,0.6); letter-spacing:0.02em;}
+  .hero-media{position:relative; z-index:2;}
+  .hero-media video{
+    width:100%; height:100%; max-height:440px; object-fit:cover;
+    border-radius:18px; border:1px solid rgba(255,255,255,0.12); display:block; background:var(--green-deep);
+  }
+
+  /* ============ Proof strip ============ */
+  .proof{padding:40px 0 8px;}
+  .proof-card{
+    background:var(--oat-200); border:1px solid var(--border); border-radius:22px;
+    padding:26px 30px;
+  }
+  .stats{display:flex; flex-wrap:wrap; gap:14px 40px; align-items:baseline;}
+  .stat{display:flex; flex-direction:column; gap:3px;}
+  .stat .n{font-size:26px; font-weight:500; letter-spacing:-0.03em; color:var(--ink); line-height:1;}
+  .stat .l{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted);}
+  .marquee{margin-top:22px; border-top:1px solid var(--oat-400); padding-top:16px; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+  .marquee-track{display:flex; gap:38px; width:max-content; animation:marquee 26s linear infinite;}
+  .marquee-track span{font-family:var(--mono); font-size:14px; color:var(--ink-mut); letter-spacing:0.02em; white-space:nowrap;}
+  @keyframes marquee{to{transform:translateX(-50%);}}
+
+  /* ============ Section intro ============ */
+  .intro{padding:60px 0 18px; max-width:640px;}
+  .intro h2{margin:14px 0 0;}
+  .intro .lead{margin-top:16px; font-size:19px;}
+
+  /* ============ Stacked feature cards (signature) ============ */
+  .stack{padding:12px 0 40px;}
+  .card{
+    position:sticky; border-radius:28px; border:1px solid var(--border);
+    padding:44px; margin-bottom:26px; overflow:hidden;
+    display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:center;
+    min-height:60vh;
+  }
+  .card .c-eyebrow{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-weight:500;
+    font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    padding:6px 12px; border-radius:100px; margin-bottom:20px;
+  }
+  .card h3{margin-bottom:16px;}
+  .card h3 .ln2{display:block;}
+  .card .c-body{font-size:17px; max-width:420px;}
+  .card .proof-line{
+    margin-top:22px; padding-top:20px; border-top:1px solid var(--oat-400);
+    font-size:16px; color:var(--ink); max-width:460px; line-height:1.5;
+  }
+  .card .proof-line b{font-weight:600;}
+  .card .c-media video{
+    width:100%; border-radius:18px; display:block; border:1px solid rgba(0,0,0,0.06);
+    aspect-ratio:16/11; object-fit:cover; background:var(--oat-100);
+  }
+  /* per-family theming */
+  .card.data{background:var(--blueberry-tint); top:96px;}
+  .card.data .c-eyebrow{background:#fff; color:var(--blueberry);}
+  .card.data h3 .ln2{color:var(--blueberry);}
+  .card.agents{background:var(--rust-tint); top:110px;}
+  .card.agents .c-eyebrow{background:#fff; color:var(--rust);}
+  .card.agents h3 .ln2{color:var(--rust);}
+  .card.orch{background:var(--lime-tint); top:124px;}
+  .card.orch .c-eyebrow{background:var(--lime-hi); color:var(--lime-deep);}
+  .card.orch h3 .ln2{color:var(--lime-deep);}
+  .card.exec{background:var(--dragon-tint); top:138px;}
+  .card.exec .c-eyebrow{background:#fff; color:var(--dragon);}
+  .card.exec h3 .ln2{color:var(--dragon);}
+  .card.exec{margin-bottom:0;}
+
+  /* ============ Demo agenda ============ */
+  .agenda{padding:70px 0;}
+  .agenda-head{max-width:560px; margin-bottom:40px;}
+  .agenda-head h2{margin-top:14px;}
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .step{border-top:2px solid var(--ink); padding-top:20px;}
+  .step .num{font-family:var(--mono); font-size:13px; color:var(--coral); letter-spacing:0.06em; font-weight:500;}
+  .step h3{font-size:26px; margin:14px 0 10px;}
+  .step p{font-size:16px;}
+
+  /* ============ Final CTA over footer claymation ============ */
+  .final{padding:16px 16px 0;}
+  .final-panel{
+    position:relative; border-radius:28px; overflow:hidden; isolation:isolate;
+    min-height:460px; display:flex; align-items:flex-end;
+  }
+  .final-panel video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2;}
+  .final-panel::after{content:''; position:absolute; inset:0; z-index:-1;
+    background:linear-gradient(180deg, rgba(2,60,42,0.30) 0%, rgba(2,60,42,0.55) 45%, rgba(2,60,42,0.88) 100%),
+               linear-gradient(90deg, rgba(2,60,42,0.55) 0%, rgba(2,60,42,0) 60%);}
+  .final-inner{padding:56px; color:var(--oat-100); max-width:620px;}
+  .final-inner h2{color:var(--oat-100); margin-bottom:16px;}
+  .final-inner p{color:rgba(254,253,251,0.9); font-size:19px; margin-bottom:28px;}
+
+  /* ============ Footer ============ */
+  footer{padding:40px 16px 28px;}
+  .foot-card{
+    max-width:var(--wrap); margin:0 auto; background:var(--oat-100);
+    border:1px solid var(--border); border-radius:22px; padding:26px 30px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .foot-card img{height:24px; width:auto;}
+  .foot-note{font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:0.02em; text-align:right; line-height:1.7;}
+
+  /* ============ Responsive ============ */
+  @media(max-width:860px){
+    .hero{grid-template-columns:1fr; padding:44px 30px; gap:28px;}
+    .hero-media video{max-height:300px;}
+    .card{grid-template-columns:1fr; padding:32px; min-height:auto; position:static !important;}
+    .card .c-media{order:-1;}
+    .steps{grid-template-columns:1fr; gap:0;}
+    .step{border-top:none; border-left:2px solid var(--ink); padding:6px 0 26px 18px;}
+    .final-inner{padding:36px 28px;}
+    .foot-card{flex-direction:column; align-items:flex-start;} .foot-note{text-align:left;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .card{position:static !important;}
+    .marquee-track{animation:none;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<div class="nav-outer">
+  <nav class="nav">
+    <div class="lockup">
+      <img src="assets/img/clay-logo-blk.png" alt="Clay">
+      <span class="x">&times;</span>
+      <span class="partner">Retool</span>
+    </div>
+    <a href="#confirm-demo" class="btn"><span class="lbl">Confirm my demo time</span> <span class="arw">&rarr;</span></a>
+  </nav>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero-shell">
+  <div class="hero wrap" style="max-width:var(--wrap);">
+    <div class="hero-copy">
+      <div class="eyebrow">Prepared for Sarah Mitchell · VP Revenue Operations, Retool</div>
+      <h1>Come build your revenue <span class="accent">engine with us — live.</span></h1>
+      <p>No slides, no 40-page deck. We'll open a Clay table with Retool-shaped accounts already loaded, and fill your coverage gaps while you watch.</p>
+      <div class="hero-cta">
+        <a href="#confirm-demo" class="btn btn-light">Confirm my demo time <span class="arw">&rarr;</span></a>
+        <span class="micro">15 minutes · a working table you keep</span>
+      </div>
+    </div>
+    <div class="hero-media">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="assets/video/hero.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PROOF ============ -->
+<section class="proof">
+  <div class="wrap">
+    <div class="proof-card">
+      <div class="stats">
+        <div class="stat"><span class="n">500,000+</span><span class="l">GTM teams build on Clay</span></div>
+        <div class="stat"><span class="n">$5B</span><span class="l">valuation</span></div>
+        <div class="stat"><span class="n">200+</span><span class="l">data providers</span></div>
+        <div class="stat"><span class="n">140M</span><span class="l">Claygent runs / month</span></div>
+        <div class="stat"><span class="n">4.9&#9733;</span><span class="l">on G2</span></div>
+      </div>
+      <div class="marquee">
+        <div class="marquee-track">
+          <span>Anthropic</span><span>OpenAI</span><span>Canva</span><span>Ramp</span><span>Rippling</span><span>Vanta</span><span>Intercom</span><span>Notion</span>
+          <span>Anthropic</span><span>OpenAI</span><span>Canva</span><span>Ramp</span><span>Rippling</span><span>Vanta</span><span>Intercom</span><span>Notion</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTRO ============ -->
+<section class="intro wrap">
+  <div class="eyebrow">What we'll build together</div>
+  <h2>Four systems, one table.</h2>
+  <p class="lead">You already run the stack. The demo isn't a pitch — it's a working session on the four things RevOps quietly loses hours to. Here's what we'll stand up in yours.</p>
+</section>
+
+<!-- ============ STACKED FEATURE CARDS ============ -->
+<section class="stack wrap">
+
+  <article class="card data">
+    <div class="c-text">
+      <span class="c-eyebrow">Waterfall enrichment</span>
+      <h3>Fill the gaps one tool <span class="ln2">can never fill.</span></h3>
+      <p class="c-body">Your best records shouldn't stall at 40% coverage. Clay waterfalls through 200+ providers until the email, the mobile, and the headcount all fill in.</p>
+      <div class="proof-line"><b>Anthropic</b> 3x'd their enrichment rate with Clay's data marketplace.</div>
+    </div>
+    <div class="c-media">
+      <video autoplay muted loop playsinline preload="none"><source src="assets/video/data.webm" type="video/webm"></video>
+    </div>
+  </article>
+
+  <article class="card agents">
+    <div class="c-text">
+      <span class="c-eyebrow">Claygent · AI research</span>
+      <h3>Give your reps back <span class="ln2">half their week.</span></h3>
+      <p class="c-body">Point Claygent at an account and it reads the site, the filings, the hiring — then writes the structured fields your reps used to dig for by hand.</p>
+      <div class="proof-line"><b>Intercom</b> grew outbound pipeline 140% by continuously researching accounts for headcount changes, technographics, and web intent.</div>
+    </div>
+    <div class="c-media">
+      <video autoplay muted loop playsinline preload="none"><source src="assets/video/agents.webm" type="video/webm"></video>
+    </div>
+  </article>
+
+  <article class="card orch">
+    <div class="c-text">
+      <span class="c-eyebrow">Orchestration</span>
+      <h3>Keep the CRM current <span class="ln2">without touching it.</span></h3>
+      <p class="c-body">Set the schedule once. Clay re-enriches on a loop, so the data your team trusts on Monday is still true on Friday.</p>
+      <div class="proof-line"><b>Merge</b> books 15% more enterprise meetings by researching 1,500 key accounts every week with Clay.</div>
+    </div>
+    <div class="c-media">
+      <video autoplay muted loop playsinline preload="none"><source src="assets/video/orch.webm" type="video/webm"></video>
+    </div>
+  </article>
+
+  <article class="card exec">
+    <div class="c-text">
+      <span class="c-eyebrow">Execution</span>
+      <h3>Ship a new play as fast <span class="ln2">as you think of it.</span></h3>
+      <p class="c-body">A funding round, a new hire, a tech install — turn any signal into an enriched, routed, ready-to-send play without waiting on a backlog.</p>
+      <div class="proof-line"><b>Mistral AI</b> cut mapping their TAM and scoring accounts from 2 months to 10 days.</div>
+    </div>
+    <div class="c-media">
+      <video autoplay muted loop playsinline preload="none"><source src="assets/video/execution.webm" type="video/webm"></video>
+    </div>
+  </article>
+
+</section>
+
+<!-- ============ DEMO AGENDA ============ -->
+<section class="agenda">
+  <div class="wrap">
+    <div class="agenda-head">
+      <div class="eyebrow">Your 15 minutes</div>
+      <h2>No slides. We build.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>We come loaded</h3>
+        <p>A live Clay table with Retool-shaped accounts, ready before you join.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>We fill the gaps</h3>
+        <p>Bring your messiest records. Watch coverage climb as we waterfall them in real time.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>You keep the table</h3>
+        <p>The build is yours to run after the call. No homework, no wall of setup.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final" id="confirm-demo">
+  <div class="final-panel">
+    <video autoplay muted loop playsinline preload="none"><source src="assets/video/footer.mp4" type="video/mp4"></video>
+    <div class="final-inner">
+      <h2>Come see your data fill in.</h2>
+      <p>Your table's already warming up. Bring the accounts you trust least.</p>
+      <a href="#confirm-demo" class="btn btn-light">Confirm my demo time <span class="arw">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-card">
+    <img src="assets/img/clay-logo-blk.png" alt="Clay">
+    <div class="foot-note">
+      A private preview built for Sarah Mitchell at Retool. Not for distribution.<br>
+      Made with love by your Clay team · Born in Brooklyn
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Respect reduced-motion: stop the looping claymation for anyone who opts out.
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.querySelectorAll('video').forEach(function(v){ v.removeAttribute('autoplay'); v.pause(); });
+  }
+</script>
+</body>
+</html>

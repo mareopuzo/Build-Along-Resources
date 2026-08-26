@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clay for Loom</title>
+<style>
+  :root{
+    --ink:#0B1120; --ink-soft:#334155; --bg:#FFFFFF; --panel:#F8FAFC;
+    --border:#E2E8F0; --accent:#6366F1; --accent-dark:#4F46E5; --accent-soft:#EEF2FF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.55;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:0 24px;}
+  header{padding:28px 0; border-bottom:1px solid var(--border);}
+  .logo{font-weight:800; font-size:20px; letter-spacing:-0.02em;}
+  .logo span{color:var(--accent);}
+  .hero{padding:64px 0 40px;}
+  .eyebrow{
+    display:inline-block; background:var(--accent-soft); color:var(--accent-dark);
+    font-size:13px; font-weight:600; padding:6px 12px; border-radius:100px; margin-bottom:20px;
+  }
+  h1{font-size:clamp(30px,4vw,44px); font-weight:800; letter-spacing:-0.02em; line-height:1.15; margin-bottom:20px;}
+  .lede{font-size:19px; color:var(--ink-soft); max-width:640px; margin-bottom:32px;}
+  .cta{
+    display:inline-block; background:var(--accent); color:#fff; font-weight:700; font-size:16px;
+    padding:14px 28px; border-radius:8px; text-decoration:none; transition:background .15s;
+  }
+  .cta:hover{background:var(--accent-dark);}
+  .cta-sub{font-size:13px; color:#94A3B8; margin-top:10px;}
+  .signal{
+    background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    padding:24px 28px; margin:40px 0; font-size:15px; color:var(--ink-soft);
+  }
+  .signal b{color:var(--ink);}
+  section{padding:40px 0;}
+  h2{font-size:26px; font-weight:800; letter-spacing:-0.01em; margin-bottom:24px;}
+  .pain-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+  .pain{border:1px solid var(--border); border-radius:10px; padding:20px; background:var(--panel);}
+  .pain .q{font-size:15px; font-style:italic; color:var(--ink-soft); margin-bottom:8px;}
+  .pain .a{font-size:14px; color:var(--ink);}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:20px; margin:32px 0;}
+  .stat{text-align:center; padding:20px; border-radius:10px; background:var(--accent-soft);}
+  .stat .num{font-size:28px; font-weight:800; color:var(--accent-dark);}
+  .stat .label{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+  .logos{
+    display:flex; flex-wrap:wrap; gap:12px 24px; align-items:center; margin-top:16px;
+    font-size:14px; font-weight:600; color:#94A3B8;
+  }
+  .final-cta{
+    background:var(--ink); color:#fff; border-radius:16px; padding:48px 36px; text-align:center; margin:56px 0;
+  }
+  .final-cta h2{color:#fff;}
+  .final-cta p{color:#CBD5E1; margin-bottom:28px; font-size:16px;}
+  .final-cta .cta{background:var(--accent);}
+  footer{border-top:1px solid var(--border); padding:32px 0; font-size:13px; color:#94A3B8;}
+  @media (max-width:600px){ .hero{padding:40px 0 24px;} section{padding:28px 0;} }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="logo">Clay<span>.</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="eyebrow">Prepared for Emily Rodriguez, Director of Sales Development at Loom</span>
+    <h1>Your SDRs already send the best video outreach in the game. Give them prospect data that's just as good.</h1>
+    <p class="lede">Loom's own numbers prove it: pairing a great message with the right context lifts reply rates — Intercom saw a 19% jump doing exactly that. Your reps aren't short on charisma. They're short on time, because half of it goes to research instead of recording.</p>
+    <a href="#book-demo" class="cta">Book your 20-minute demo</a>
+    <div class="cta-sub">See Clay mapped to Loom's SDR workflow — no generic pitch.</div>
+  </div>
+
+  <div class="signal">
+    <b>Why we're reaching out now:</b> Loom's revenue is projected to hit roughly $150M in 2026, nearly double what it was in 2023, as adoption accelerates at both enterprise and SMB levels. That growth means more inbound and outbound volume hitting your SDR team — and the accounts that get personalized, well-researched video outreach are the ones that convert.
+  </div>
+
+  <section>
+    <h2>The SDR-team tax you're probably paying right now</h2>
+    <div class="pain-grid">
+      <div class="pain">
+        <div class="q">"Our SDRs spend half their time researching instead of selling."</div>
+        <div class="a">Clay automates the research step so reps open Loom with the right context already loaded — no more 15 tabs open per prospect.</div>
+      </div>
+      <div class="pain">
+        <div class="q">"We can't personalize at scale without hiring more people."</div>
+        <div class="a">Claygent, Clay's AI research agent, scrapes company sites, LinkedIn, and news to generate the specific detail that makes a video outreach message land.</div>
+      </div>
+      <div class="pain">
+        <div class="q">"Our enrichment coverage is only 40-60%."</div>
+        <div class="a">Waterfall enrichment through 150+ providers means fewer prospects your SDRs have to skip for lack of data.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What Clay actually is</h2>
+    <p style="color:var(--ink-soft); max-width:680px;">A GTM development environment — 150+ data providers and AI research agents in a spreadsheet-simple interface. Import your SDR list, enrich it, and hand reps the exact detail worth mentioning before they hit record.</p>
+    <div class="stats">
+      <div class="stat"><div class="num">3x</div><div class="label">enrichment coverage vs. single-provider tools</div></div>
+      <div class="stat"><div class="num">80%</div><div class="label">less manual research time</div></div>
+      <div class="stat"><div class="num">5,000+</div><div class="label">customers on Clay</div></div>
+      <div class="stat"><div class="num">4.9</div><div class="label">rating on G2</div></div>
+    </div>
+    <div class="logos">Trusted by: Intercom &nbsp;·&nbsp; Rippling &nbsp;·&nbsp; Vanta &nbsp;·&nbsp; Notion &nbsp;·&nbsp; Canva &nbsp;·&nbsp; Ramp</div>
+  </section>
+
+  <div class="final-cta">
+    <h2>Let's map Clay to your SDR workflow</h2>
+    <p>20 minutes. We'll look at how much research time your team could get back — and put toward more recorded outreach.</p>
+    <a href="#book-demo" class="cta">Book your demo</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">Sent by your Clay account team &middot; This page was built specifically for Loom</div>
+</footer>
+</body>
+</html>

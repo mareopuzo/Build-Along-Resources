@@ -1,0 +1,15 @@
+# OS junk
+.DS_Store
+**/.DS_Store
+__MACOSX/
+
+# Big / redundant asset bundles (the site's needed assets live in landing-pages/assets/)
+*.zip
+assets/Day 2 Build Along Resources/clay-assets/
+
+# Vercel local project link
+.vercel/
+landing-pages/.vercel/
+
+# Node
+node_modules/
